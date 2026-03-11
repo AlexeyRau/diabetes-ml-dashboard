@@ -15,9 +15,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ─────────────────────────────────────────────
-# СТИЛИ
-# ─────────────────────────────────────────────
 st.markdown("""
 <style>
     .main-header {font-size: 2.2rem; font-weight: 700; color: #1f4e79; margin-bottom: 0.2rem;}
@@ -58,10 +55,6 @@ st.markdown("""
     [data-testid="stSidebar"] * {color: white !important;}
 </style>
 """, unsafe_allow_html=True)
-
-# ─────────────────────────────────────────────
-# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-# ─────────────────────────────────────────────
 
 FEATURE_NAMES = [
     'HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke',
@@ -115,7 +108,6 @@ AGE_GROUPS = {
 
 @st.cache_resource
 def load_model(path):
-    """Загружает модель из файла. Поддерживает Pipeline, CatBoost и bundle-формат."""
     if not os.path.exists(path):
         return None
     obj = joblib.load(path)
@@ -123,16 +115,12 @@ def load_model(path):
 
 
 def predict_with_model(model_key, model_obj, X):
-    """Единая функция предсказания для любого типа модели.
-    Всегда возвращает плоский массив int."""
-    # Stacking сохранён как {'scaler': ..., 'model': ...}
     if isinstance(model_obj, dict) and 'scaler' in model_obj:
         X_sc = model_obj['scaler'].transform(X)
         preds = model_obj['model'].predict(X_sc)
     else:
         preds = model_obj.predict(X)
 
-    # CatBoost в Pipeline возвращает 2D массив [[0],[1],...] — нормализуем
     preds = np.array(preds)
     if preds.ndim > 1:
         preds = preds.flatten()
@@ -142,7 +130,7 @@ def predict_with_model(model_key, model_obj, X):
 def load_dataset():
     candidates = [
         'filtered_diabetes_health_indicators.csv',
-        '../datasets/filtered_diabetes_health_indicators.csv',
+        '/datasets/filtered_diabetes_health_indicators.csv',
         'data/filtered_diabetes_health_indicators.csv',
     ]
     for p in candidates:
@@ -150,10 +138,6 @@ def load_dataset():
             return pd.read_csv(p)
     return None
 
-
-# ─────────────────────────────────────────────
-# СТРАНИЦА 1: РАЗРАБОТЧИК
-# ─────────────────────────────────────────────
 def page_developer():
     st.markdown('<div class="main-header">👨‍💻 Информация о разработчике</div>', unsafe_allow_html=True)
 
@@ -166,7 +150,6 @@ def page_developer():
                 photo_found = True
                 break
         if not photo_found:
-            st.info('📷 Добавьте файл photo.jpg в папку с приложением')
             st.markdown("""
             <div style="width:280px;height:320px;background:linear-gradient(135deg,#667eea,#764ba2);
                         border-radius:12px;display:flex;align-items:center;justify-content:center;
@@ -179,8 +162,8 @@ def page_developer():
         <div style="background:#f0f4ff; border-left:4px solid #4c72b0;
                     padding:0.8rem 1.2rem; border-radius:0 8px 8px 0; margin:0.5rem 0;
                     color:#1a1a1a !important;">
-        <span style="color:#1a1a1a;"><b style="color:#1f4e79;">ФИО:</b> Введите своё ФИО<br>
-        <b style="color:#1f4e79;">Группа:</b> Ваша учебная группа<br>
+        <span style="color:#1a1a1a;"><b style="color:#1f4e79;">ФИО:</b> Рау Алексей Евгеньевич<br>
+        <b style="color:#1f4e79;">Группа:</b> ФИТ-231<br>
         <b style="color:#1f4e79;">Дисциплина:</b> Машинное обучение и большие данные</span>
         </div>
         """, unsafe_allow_html=True)
@@ -230,10 +213,6 @@ def page_developer():
             </span></div>""",
             unsafe_allow_html=True)
 
-
-# ─────────────────────────────────────────────
-# СТРАНИЦА 2: ДАТАСЕТ
-# ─────────────────────────────────────────────
 def page_dataset():
     st.markdown('<div class="main-header">📊 Информация о датасете</div>', unsafe_allow_html=True)
 
@@ -302,10 +281,6 @@ def page_dataset():
     else:
         st.info("ℹ️ Добавьте файл `filtered_diabetes_health_indicators.csv` в папку с приложением для отображения данных.")
 
-
-# ─────────────────────────────────────────────
-# СТРАНИЦА 3: ВИЗУАЛИЗАЦИИ
-# ─────────────────────────────────────────────
 def page_visualizations():
     st.markdown('<div class="main-header">📈 Визуализации данных</div>', unsafe_allow_html=True)
 
@@ -319,7 +294,6 @@ def page_visualizations():
 
 
 def _demo_visualizations():
-    """Демо-визуализации на синтетических данных, если датасета нет."""
     st.info("📊 Отображаются демонстрационные графики на синтетических данных")
     rng = np.random.default_rng(42)
     n = 1000
@@ -339,13 +313,11 @@ def _real_visualizations(df):
     num_cols = ['BMI', 'Age', 'GenHlth', 'MentHlth', 'PhysHlth']
     bin_cols = ['HighBP', 'HighChol', 'Smoker', 'Stroke',
                 'HeartDiseaseorAttack', 'PhysActivity', 'DiffWalk']
-    # filter to existing
     num_cols = [c for c in num_cols if c in df.columns]
     bin_cols = [c for c in bin_cols if c in df.columns]
 
     palette = {0: '#55a868', 1: '#f4a623', 2: '#dd4b39'}
 
-    # ── Визуализация 1: распределение классов ──────────────────────────
     st.subheader("1️⃣ Распределение целевой переменной (Diabetes_012)")
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
     counts = df[target].value_counts().sort_index()
@@ -363,7 +335,6 @@ def _real_visualizations(df):
     st.pyplot(fig)
     plt.close()
 
-    # ── Визуализация 2: распределения числовых признаков ───────────────
     st.subheader("2️⃣ Распределения числовых признаков по классам (Box-plot)")
     if num_cols:
         fig, axes = plt.subplots(1, len(num_cols), figsize=(4 * len(num_cols), 5))
@@ -384,7 +355,6 @@ def _real_visualizations(df):
         st.pyplot(fig)
         plt.close()
 
-    # ── Визуализация 3: тепловая карта корреляций ──────────────────────
     st.subheader("3️⃣ Тепловая карта корреляций")
     corr_cols = [c for c in FEATURE_NAMES if c in df.columns] + [target]
     corr = df[corr_cols].corr()
@@ -398,7 +368,6 @@ def _real_visualizations(df):
     st.pyplot(fig)
     plt.close()
 
-    # ── Визуализация 4: бинарные признаки ─────────────────────────────
     st.subheader("4️⃣ Доля заболевших диабетом по бинарным признакам")
     if bin_cols:
         fig, axes = plt.subplots(2, 4, figsize=(16, 8))
@@ -423,7 +392,6 @@ def _real_visualizations(df):
         st.pyplot(fig)
         plt.close()
 
-    # ── Визуализация 5: scatter BMI vs Age ────────────────────────────
     if 'BMI' in df.columns and 'Age' in df.columns:
         st.subheader("5️⃣ BMI vs Возраст — scatter plot по классам")
         sample = df.sample(min(5000, len(df)), random_state=42)
@@ -442,14 +410,9 @@ def _real_visualizations(df):
         st.pyplot(fig)
         plt.close()
 
-
-# ─────────────────────────────────────────────
-# СТРАНИЦА 4: ПРЕДСКАЗАНИЯ
-# ─────────────────────────────────────────────
 def page_prediction():
     st.markdown('<div class="main-header">🤖 Предсказание моделей ML</div>', unsafe_allow_html=True)
 
-    # Выбор моделей
     model_keys = list(MODEL_INFO.keys())
     selected = st.multiselect(
         "Выберите модели для предсказания:",
@@ -460,7 +423,6 @@ def page_prediction():
 
     tab1, tab2 = st.tabs(["📂 Загрузка CSV", "✍️ Ручной ввод"])
 
-    # ── Вкладка 1: CSV ────────────────────────────────────────────────
     with tab1:
         st.markdown("""
         <div style="background:#f0f4ff; border-left:4px solid #4c72b0;
@@ -487,14 +449,12 @@ def page_prediction():
                     st.error(f"❌ В файле отсутствуют столбцы: {missing_cols}")
                 else:
                     X_input = df_in[FEATURE_NAMES].copy()
-                    # Валидация диапазонов
                     if not ((X_input['BMI'] >= 10) & (X_input['BMI'] <= 100)).all():
                         st.warning("⚠️ Некоторые значения BMI выходят за ожидаемый диапазон (10–100)")
                     _run_predictions(X_input, selected)
             except Exception as e:
                 st.error(f"Ошибка чтения файла: {e}")
 
-    # ── Вкладка 2: Ручной ввод ────────────────────────────────────────
     with tab2:
         st.markdown("#### Введите данные пациента")
 
@@ -582,7 +542,6 @@ def page_prediction():
 
 
 def _run_predictions(X_input, selected_models, manual=False):
-    """Выполняет предсказания выбранными моделями и выводит результаты."""
     if not selected_models:
         st.warning("Выберите хотя бы одну модель.")
         return
@@ -618,7 +577,6 @@ def _run_predictions(X_input, selected_models, manual=False):
                 'F1 (тест)': info['f1'],
             })
 
-    # Стили карточек результатов по классу
     CARD_STYLES = {
         0: ('background:#d4edda; border-left:5px solid #28a745;', 'color:#155724;'),
         1: ('background:#fff3cd; border-left:5px solid #ffc107;', 'color:#856404;'),
@@ -626,7 +584,6 @@ def _run_predictions(X_input, selected_models, manual=False):
     }
 
     if manual and len(X_input) == 1:
-        # Для ручного ввода — красивые карточки
         cols = st.columns(min(len(results), 3))
         for i, res in enumerate(results):
             with cols[i % len(cols)]:
@@ -646,7 +603,6 @@ def _run_predictions(X_input, selected_models, manual=False):
                 else:
                     st.error(f"**{res['Модель']}**\n{pred}")
     else:
-        # Для CSV — таблица
         table_rows = []
         for res in results:
             pred = res['Предсказание']
@@ -668,7 +624,6 @@ def _run_predictions(X_input, selected_models, manual=False):
         if table_rows:
             st.dataframe(pd.DataFrame(table_rows), use_container_width=True, hide_index=True)
 
-    # Если есть данные — вывести сравнение моделей
     valid = [r for r in results if isinstance(r['Предсказание'], list)]
     if valid and len(X_input) == 1:
         st.markdown("#### 📊 Сравнение предсказаний моделей")
@@ -695,10 +650,6 @@ def _run_predictions(X_input, selected_models, manual=False):
         st.pyplot(fig)
         plt.close()
 
-
-# ─────────────────────────────────────────────
-# НАВИГАЦИЯ И ЗАПУСК
-# ─────────────────────────────────────────────
 PAGES = {
     "👨‍💻 О разработчике":  page_developer,
     "📊 О датасете":         page_dataset,
