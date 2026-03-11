@@ -61,8 +61,7 @@ streamlit run app.py
 ## 🌐 Деплой (Streamlit Cloud)
 
 Приложение задеплоено на Streamlit Cloud:  
-🔗 **[Ссылка на веб-приложение](https://ВАШ_APP.streamlit.app)**  
-*(заменить на реальную ссылку после деплоя)*
+🔗 **[Ссылка на веб-приложение](https://diabetes-ml-dashboard-ukmy78g9rj8wm2zkozkatf.streamlit.app/)**  
 
 ---
 
