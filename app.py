@@ -363,20 +363,13 @@ FEATURE_DESCRIPTIONS = {
 }
 
 MODEL_INFO = {
-    'DecisionTree':     {'path': 'models/dt_classifier_model.pkl',    'f1': 0.0, 'label': 'Decision Tree',      'type': 'ML1 / Classic'},
-    'GradientBoosting': {'path': 'models/gb_classifier_model.pkl',    'f1': 0.0, 'label': 'Gradient Boosting',  'type': 'ML2 / Boosting'},
-    'CatBoost':         {'path': 'models/cb_classifier_model.pkl',    'f1': 0.0, 'label': 'CatBoost',           'type': 'ML3 / Adv. Boosting'},
-    'Bagging':          {'path': 'models/bag_classifier_model.pkl',   'f1': 0.0, 'label': 'Bagging',            'type': 'ML4 / Bagging'},
-    'Stacking':         {'path': 'models/stack_classifier_model.pkl', 'f1': 0.0, 'label': 'Stacking',           'type': 'ML5 / Stacking'},
-    'NeuralNetwork':    {'path': 'models/nn_classifier_model.pkl',    'f1': 0.0, 'label': 'MLP Neural Net',     'type': 'ML6 / Deep'},
+    'DecisionTree':     {'path': 'models/dt_classifier_model.pkl',    'f1': 0.3950, 'label': 'Decision Tree',      'type': 'ML1 / Classic'},
+    'GradientBoosting': {'path': 'models/gb_classifier_model.pkl',    'f1': 0.3998, 'label': 'Gradient Boosting',  'type': 'ML2 / Boosting'},
+    'CatBoost':         {'path': 'models/cb_classifier_model.pkl',    'f1': 0.4003, 'label': 'CatBoost',           'type': 'ML3 / Adv. Boosting'},
+    'Bagging':          {'path': 'models/bag_classifier_model.pkl',   'f1': 0.3934, 'label': 'Bagging',            'type': 'ML4 / Bagging'},
+    'Stacking':         {'path': 'models/stack_classifier_model.pkl', 'f1': 0.4055, 'label': 'Stacking',           'type': 'ML5 / Stacking'},
+    'NeuralNetwork':    {'path': 'models/nn_classifier_model.pkl',    'f1': 0.4017, 'label': 'MLP Neural Net',     'type': 'ML6 / Deep'},
 }
-
-_f1_map = {
-    'DecisionTree': 0.4012, 'GradientBoosting': 0.4179, 'CatBoost': 0.4222,
-    'Bagging': 0.4019, 'Stacking': 0.4118, 'NeuralNetwork': 0.7920,
-}
-for k, v in _f1_map.items():
-    MODEL_INFO[k]['f1'] = v
 
 CLASS_LABELS = {0: 'Диабет не выявлен', 1: 'Предиабет', 2: 'Диабет 2 типа'}
 CLASS_SHORT   = {0: 'НОРМА', 1: 'ПРЕДИАБЕТ', 2: 'ДИАБЕТ II'}
