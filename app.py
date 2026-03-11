@@ -130,7 +130,7 @@ def predict_with_model(model_key, model_obj, X):
 def load_dataset():
     candidates = [
         'filtered_diabetes_health_indicators.csv',
-        '/datasets/filtered_diabetes_health_indicators.csv',
+        'datasets/filtered_diabetes_health_indicators.csv',
         'data/filtered_diabetes_health_indicators.csv',
     ]
     for p in candidates:
