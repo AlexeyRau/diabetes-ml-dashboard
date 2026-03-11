@@ -1,5 +1,4 @@
 models/*.pkl
 catboost_info/
-datasets/
 __pycache__/
 .gitattributes
